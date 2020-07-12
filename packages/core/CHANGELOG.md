@@ -1,5 +1,26 @@
 # xstate
 
+## 4.11.1
+
+### Patch Changes
+
+- [`3ab3f25e`](https://github.com/davidkpiano/xstate/commit/3ab3f25ea297e4d770eef512e9583475c943845d) [#1285](https://github.com/davidkpiano/xstate/pull/1285) Thanks [@Andarist](https://github.com/Andarist)! - Fixed an issue with initial state of invoked machines being read without custom data passed to them which could lead to a crash when evaluating transient transitions for the initial state.
+
+* [`a7da1451`](https://github.com/davidkpiano/xstate/commit/a7da14510fd1645ad041836b567771edb5b90827) [#1290](https://github.com/davidkpiano/xstate/pull/1290) Thanks [@davidkpiano](https://github.com/davidkpiano)! - The "Attempted to spawn an Actor [...] outside of a service. This will have no effect." warnings are now silenced for "lazily spawned" actors, which are actors that aren't immediately active until the function that creates them are called:
+
+  ```js
+  // ⚠️ "active" actor - will warn
+  spawn(somePromise);
+
+  // 🕐 "lazy" actor - won't warn
+  spawn(() => somePromise);
+
+  // 🕐 machines are also "lazy" - won't warn
+  spawn(someMachine);
+  ```
+
+  It is recommended that all `spawn(...)`-ed actors are lazy, to avoid accidentally initializing them e.g., when reading `machine.initialState` or calculating otherwise pure transitions. In V5, this will be enforced.
+
 ## 4.11.0
 
 ### Minor Changes
